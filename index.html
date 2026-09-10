@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GameGuardian 全方位功能指南 & 互動圖譜 | GG Memory Editor Master Reference</title>
+  <meta name="description" content="全方位介紹 GameGuardian (GG 修改器) 核心與進階功能，包含記憶體搜尋類型、分枝圖譜、指針追蹤、Lua腳本自動化、記憶體分區與反偵測 Bypass 實戰指南。">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+  
+  <!-- Background Glow & Grid Canvas -->
+  <div class="bg-effects">
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+    <div class="grid-overlay"></div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="brand">
+        <div class="brand-logo">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span class="logo-pulse"></span>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">GameGuardian</span>
+          <span class="brand-badge">PRO MASTER GUIDE</span>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <a href="#branch-section" class="nav-item active" id="nav-branch"><i class="fa-solid fa-sitemap"></i> 功能樹狀分枝</a>
+        <a href="#simulator-section" class="nav-item" id="nav-sim"><i class="fa-solid fa-terminal"></i> 記憶體搜尋模擬</a>
+        <a href="#speedhack-section" class="nav-item" id="nav-speed"><i class="fa-solid fa-gauge-high"></i> 變速器試驗場</a>
+        <a href="#memory-map-section" class="nav-item" id="nav-mem"><i class="fa-solid fa-layer-group"></i> 記憶體區塊地圖</a>
+        <a href="#lua-section" class="nav-item" id="nav-lua"><i class="fa-code"></i> Lua 腳本工作坊</a>
+      </nav>
+
+      <div class="nav-actions">
+        <div class="search-bar-box">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" id="global-search-input" placeholder="搜尋功能 (如: 聯合搜尋, XOR, 指針, Bypass)..." />
+          <span class="search-shortcut">/</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-container">
+      <div class="hero-tag">
+        <i class="fa-solid fa-microchip"></i> Android 最強大的記憶體修改與腳本自動化神器
+      </div>
+      <h1 class="hero-title">
+        GameGuardian <span class="gradient-text">全方位功能導覽圖譜</span>
+      </h1>
+      <p class="hero-subtitle">
+        專為模組開發者、逆向研究員與遊戲極客設計。從基礎數值搜尋、聯合組搜尋、位址偏移、指針追蹤，到多層級 Lua 腳本驅動與反偵測 Bypass 完整解析。
+      </p>
+      
+      <div class="hero-stats">
+        <div class="stat-card">
+          <div class="stat-num">6 大</div>
+          <div class="stat-label">核心架構分枝</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">30+</div>
+          <div class="stat-label">深度子功能節點</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">10+</div>
+          <div class="stat-label">記憶體區域類型 (Ranges)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">Interactive</div>
+          <div class="stat-label">動態模擬與腳本產生</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Branch Tree Section -->
+  <section id="branch-section" class="branch-section">
+    <div class="section-header">
+      <div class="section-subtitle"><i class="fa-solid fa-diagram-project"></i> FEATURE TREE GRAPH</div>
+      <h2 class="section-title">全功能 <span class="gradient-text">互動樹狀分枝圖</span></h2>
+      <p class="section-desc">點擊各主分枝節點可展開層層子功能，點擊具體節點即可檢視詳細原理解析、操作說明與程式碼範例。</p>
+      
+      <!-- Filter Bar -->
+      <div class="branch-controls">
+        <div class="filter-group">
+          <span class="filter-label"><i class="fa-solid fa-filter"></i> 分類過濾：</span>
+          <button class="filter-btn active" data-category="all">全部模組</button>
+          <button class="filter-btn" data-category="search"><i class="fa-solid fa-magnifying-glass"></i> 數值搜尋</button>
+          <button class="filter-btn" data-category="regions"><i class="fa-solid fa-memory"></i> 記憶體區域</button>
+          <button class="filter-btn" data-category="pointer"><i class="fa-solid fa-link"></i> 指針與位址</button>
+          <button class="filter-btn" data-category="speed"><i class="fa-solid fa-bolt"></i> 變速與時間</button>
+          <button class="filter-btn" data-category="lua"><i class="fa-code"></i> Lua 腳本</button>
+          <button class="filter-btn" data-category="bypass"><i class="fa-solid fa-user-shield"></i> 反偵測 Bypass</button>
+        </div>
+        <div class="tree-view-actions">
+          <button id="expand-all-btn" class="action-btn"><i class="fa-solid fa-expand"></i> 全部展開</button>
+          <button id="collapse-all-btn" class="action-btn"><i class="fa-solid fa-compress"></i> 全部折疊</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dynamic Branch Tree Canvas / DOM Structure -->
+    <div class="branch-tree-container" id="branch-tree-container">
+      <svg id="tree-connections" class="tree-connections-svg"></svg>
+      <div class="tree-root-wrapper">
+        <div class="tree-root-node">
+          <div class="root-icon"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="root-label">GameGuardian Core Engine</div>
+          <div class="root-sub">核心引擎體系</div>
+        </div>
+        <div class="branches-wrapper" id="branches-wrapper">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Search Simulator Section -->
+  <section id="simulator-section" class="interactive-section">
+    <div class="section-header">
+      <div class="section-subtitle"><i class="fa-solid fa-vial"></i> INTERACTIVE LAB</div>
+      <h2 class="section-title">GameGuardian <span class="gradient-text">記憶體搜尋實體模擬器</span></h2>
+      <p class="section-desc">透過模擬實體遊戲記憶體空間，體驗精確搜尋、聯合搜尋 (Group Search) 與二次篩選流程。</p>
+    </div>
+
+    <div class="simulator-card glass-panel">
+      <div class="sim-header">
+        <div class="sim-title"><i class="fa-solid fa-laptop-code"></i> 記憶體數據庫模擬狀態</div>
+        <div class="sim-badges">
+          <span class="sim-badge" id="sim-region-badge">Region: Anonymous (A)</span>
+          <span class="sim-badge" id="sim-count-badge">記錄數: 10,000 個記憶體位址</span>
+        </div>
+      </div>
+
+      <div class="sim-body">
+        <!-- Controls Panel -->
+        <div class="sim-controls">
+          <div class="sim-form-group">
+            <label for="sim-search-type">1. 搜尋數據類型 (Type)</label>
+            <select id="sim-search-type" class="sim-input">
+              <option value="Dword">Dword (4 Bytes - 整數/金幣/經驗)</option>
+              <option value="Float">Float (4 Bytes - 單精度/血量/座標)</option>
+              <option value="Group">Group Search (聯合搜尋: 100;200;500::9)</option>
+              <option value="Xor">XOR 加密數據 (XOR Encrypted)</option>
+            </select>
+          </div>
+
+          <div class="sim-form-group">
+            <label for="sim-search-val">2. 搜尋數值 (Value / Syntax)</label>
+            <input type="text" id="sim-search-val" class="sim-input" value="1000" placeholder="輸入搜尋數值，例如 1000 或 100;500::9" />
+          </div>
+
+          <div class="sim-button-group">
+            <button id="sim-btn-first" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i> 新搜尋 (First Search)</button>
+            <button id="sim-btn-refine" class="btn btn-secondary" disabled><i class="fa-solid fa-filter"></i> 再次搜尋 (Refine/Filter)</button>
+            <button id="sim-btn-reset" class="btn btn-outline"><i class="fa-solid fa-rotate-left"></i> 重設記憶體</button>
+          </div>
+        </div>
+
+        <!-- Simulator Result Panel -->
+        <div class="sim-results-panel">
+          <div class="sim-panel-title">
+            <span><i class="fa-solid fa-list-check"></i> 搜尋結果清單 (Results List)</span>
+            <span id="sim-result-status">尚未執行搜尋</span>
+          </div>
+
+          <div class="sim-table-wrapper">
+            <table class="sim-table">
+              <thead>
+                <tr>
+                  <th>記憶體位址 (Address)</th>
+                  <th>類型 (Type)</th>
+                  <th>目前數值 (Value)</th>
+                  <th>記憶體區域</th>
+                  <th>快速操作</th>
+                </tr>
+              </thead>
+              <tbody id="sim-table-body">
+                <tr>
+                  <td colspan="5" class="empty-msg">請點擊上方「新搜尋」開始模擬搜尋流程...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="sim-batch-action">
+            <input type="text" id="sim-edit-all-val" class="sim-input" placeholder="批量修改數值 (例如: 999999)" />
+            <button id="sim-btn-edit-all" class="btn btn-accent" disabled><i class="fa-solid fa-pen-to-square"></i> 批量修改 (Edit All)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Speed Hack Section -->
+  <section id="speedhack-section" class="interactive-section">
+    <div class="section-header">
+      <div class="section-subtitle"><i class="fa-solid fa-gauge-high"></i> TIMING LAB</div>
+      <h2 class="section-title">Speed Hack <span class="gradient-text">遊戲變速與時間跳躍試驗場</span></h2>
+      <p class="section-desc">GameGuardian 透過 Hook Android 系統時間函數 (gettimeofday / clock_gettime) 實現即時倍速操控。</p>
+    </div>
+
+    <div class="speedhack-grid">
+      <!-- Controller Card -->
+      <div class="glass-panel speed-card">
+        <h3 class="card-title"><i class="fa-solid fa-sliders"></i> 倍速調控面板</h3>
+        <div class="speed-display">
+          <span class="speed-val" id="speed-multiplier-text">1.0x</span>
+          <span class="speed-label">當前變速倍率</span>
+        </div>
+
+        <div class="speed-slider-wrapper">
+          <input type="range" id="speed-slider" min="0.1" max="10.0" step="0.1" value="1.0" class="custom-slider">
+          <div class="slider-marks">
+            <span>0.1x (減速)</span>
+            <span>1.0x (原速)</span>
+            <span>5.0x (加速)</span>
+            <span>10.0x (極速)</span>
+          </div>
+        </div>
+
+        <div class="speed-preset-buttons">
+          <button class="preset-btn" data-speed="0.2">0.2x 慢動作</button>
+          <button class="preset-btn active" data-speed="1.0">1.0x 標準</button>
+          <button class="preset-btn" data-speed="3.0">3.0x 快進</button>
+          <button class="preset-btn" data-speed="10.0">10.0x 狂暴</button>
+        </div>
+
+        <div class="time-jump-box">
+          <div class="box-title"><i class="fa-solid fa-clock-rotate-left"></i> 時間跳躍 (Time Jump)</div>
+          <div class="jump-inputs">
+            <input type="number" id="jump-seconds" class="sim-input" value="3600" placeholder="秒數">
+            <button id="btn-time-jump" class="btn btn-accent"><i class="fa-solid fa-forward"></i> 前進 1 小時</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Animation Visualizer -->
+      <div class="glass-panel animation-card">
+        <h3 class="card-title"><i class="fa-solid fa-gamepad"></i> 遊戲時間與物理渲染模擬</h3>
+        <div class="game-canvas-container">
+          <canvas id="game-sim-canvas" width="500" height="260"></canvas>
+        </div>
+        <div class="game-sim-stats">
+          <div><i class="fa-solid fa-stopwatch"></i> 遊戲內部時間: <span id="game-time-clock">00:00:00</span></div>
+          <div><i class="fa-solid fa-chart-line"></i> 動態影格 FPS: <span id="game-fps-counter">60</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Memory Regions Map Section -->
+  <section id="memory-map-section" class="interactive-section">
+    <div class="section-header">
+      <div class="section-subtitle"><i class="fa-solid fa-layer-group"></i> MEMORY RANGES</div>
+      <h2 class="section-title">Android <span class="gradient-text">記憶體區域分佈地圖 (Ranges)</span></h2>
+      <p class="section-desc">GameGuardian 提供精準的記憶體區段過濾機制。正確勾選區段能提速 10 倍並防止無效搜尋。</p>
+    </div>
+
+    <div class="memory-map-wrapper glass-panel">
+      <div class="memory-map-grid" id="memory-map-grid">
+        <!-- Rendered by JS -->
+      </div>
+
+      <div class="memory-details-box" id="memory-details-box">
+        <div class="mem-detail-header">
+          <span class="mem-code" id="mem-detail-code">Anonymous (A)</span>
+          <span class="mem-tag" id="mem-detail-recommend">推薦標的：金幣、血量、動態物件</span>
+        </div>
+        <p class="mem-detail-desc" id="mem-detail-desc">
+          Anonymous 區域是用戶端 C/C++ 動態分配 (malloc) 最常儲存遊戲核心數據的地方（如 Unity 的 Mono 堆疊、Unreal Engine 的動態物件數據）。90% 的數值修改都在此區段。
+        </p>
+        <div class="mem-detail-meta">
+          <div class="meta-item">
+            <span class="meta-lbl">存取權限：</span>
+            <span class="meta-val" id="mem-detail-perm">Read / Write (rw-p)</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-lbl">搜尋速度衝擊：</span>
+            <span class="meta-val" id="mem-detail-speed">中等 (推薦勾選)</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-lbl">常見範例：</span>
+            <span class="meta-val" id="mem-detail-example">Unity Mono 遊戲數值, C++ Struct</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lua Scripting Workshop Section -->
+  <section id="lua-section" class="interactive-section">
+    <div class="section-header">
+      <div class="section-subtitle"><i class="fa-code"></i> AUTOMATION ENGINE</div>
+      <h2 class="section-title">Lua 腳本自動化 <span class="gradient-text">開發工作坊</span></h2>
+      <p class="section-desc">GameGuardian 內建高階 Lua 5.3 解譯器，可自動化複雜搜尋、製作彈出式選單與鎖定記憶體位址。</p>
+    </div>
+
+    <div class="lua-workshop-grid">
+      <!-- Templates Selector -->
+      <div class="glass-panel lua-sidebar">
+        <h3 class="card-title"><i class="fa-solid fa-list-ul"></i> 常用實用腳本範本</h3>
+        <div class="lua-template-list">
+          <button class="lua-tmpl-btn active" data-tmpl="basic-search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <div>
+              <div class="tmpl-name">基礎數值搜尋與批量修改</div>
+              <div class="tmpl-desc">自動搜尋 1000 並修改為 999999</div>
+            </div>
+          </button>
+
+          <button class="lua-tmpl-btn" data-tmpl="group-search">
+            <i class="fa-solid fa-object-group"></i>
+            <div>
+              <div class="tmpl-name">聯合搜尋 Group Search</div>
+              <div class="tmpl-desc">自動鎖定距離間隔數值組</div>
+            </div>
+          </button>
+
+          <button class="lua-tmpl-btn" data-tmpl="custom-menu">
+            <i class="fa-solid fa-bars-staggered"></i>
+            <div>
+              <div class="tmpl-name">UI 選單腳本 (gg.choice)</div>
+              <div class="tmpl-desc">建立極富質感的彈出式功能選單</div>
+            </div>
+          </button>
+
+          <button class="lua-tmpl-btn" data-tmpl="pointer-freeze">
+            <i class="fa-solid fa-snowflake"></i>
+            <div>
+              <div class="tmpl-name">記憶體後台凍結迴圈</div>
+              <div class="tmpl-desc">即時鎖定血量與無限體力</div>
+            </div>
+          </button>
+
+          <button class="lua-tmpl-btn" data-tmpl="bypass-wrapper">
+            <i class="fa-solid fa-user-shield"></i>
+            <div>
+              <div class="tmpl-name">Bypass 防偵測腳本模板</div>
+              <div class="tmpl-desc">隱藏處理程序與偽裝進程</div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Code Preview & Editor -->
+      <div class="glass-panel lua-editor-panel">
+        <div class="editor-header">
+          <div class="editor-title"><i class="fa-solid fa-file-code"></i> script.lua</div>
+          <button id="copy-lua-btn" class="btn btn-outline btn-sm"><i class="fa-regular fa-copy"></i> 複製腳本程式碼</button>
+        </div>
+        
+        <pre class="code-block"><code id="lua-code-display">-- GameGuardian Lua Automation Script
+gg.clearResults()
+gg.setRanges(gg.REGION_ANONYMOUS)
+gg.searchNumber("1000", gg.TYPE_DWORD, false, gg.SIGN_EQUAL, 0, -1)
+local count = gg.getResultCount()
+if count > 0 then
+    local results = gg.getResults(count)
+    gg.editAll("999999", gg.TYPE_DWORD)
+    gg.toast("修改成功！共修改了 " .. count .. " 個位址")
+else
+    gg.alert("未搜尋到指定數值！")
+end</code></pre>
+
+        <div class="editor-footer">
+          <div class="api-doc-tip">
+            <i class="fa-solid fa-circle-info"></i> API 說明：<code>gg.searchNumber(text, type, encrypted, sign, memoryFrom, memoryTo)</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Detailed Modal Drawer for Branch Node -->
+  <div id="feature-modal" class="modal-backdrop">
+    <div class="modal-container glass-panel">
+      <button class="modal-close" id="modal-close-btn"><i class="fa-solid fa-xmark"></i></button>
+      
+      <div class="modal-header">
+        <div class="modal-icon-wrapper" id="modal-icon"><i class="fa-solid fa-cube"></i></div>
+        <div>
+          <div class="modal-category" id="modal-category">CATEGORY</div>
+          <h2 class="modal-title" id="modal-title">Feature Name</h2>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-section">
+          <h3><i class="fa-solid fa-book-open"></i> 原理與核心概念</h3>
+          <p id="modal-concept">Concept description here...</p>
+        </div>
+
+        <div class="modal-section">
+          <h3><i class="fa-solid fa-list-ol"></i> 實戰操作步驟 (Step-by-step)</h3>
+          <ol id="modal-steps" class="custom-steps-list">
+            <!-- Step items -->
+          </ol>
+        </div>
+
+        <div class="modal-section" id="modal-code-sec">
+          <h3><i class="fa-solid fa-code"></i> Lua 相關代碼與關鍵 API</h3>
+          <pre class="code-block"><code id="modal-code-block">-- Code snippet</code></pre>
+        </div>
+
+        <div class="modal-section" id="modal-tips-sec">
+          <div class="alert-box alert-tip">
+            <i class="fa-solid fa-lightbulb alert-icon"></i>
+            <div>
+              <strong>專家技巧 (Pro Tip)：</strong>
+              <span id="modal-tip-text">Pro tip text here.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <i class="fa-solid fa-shield-halved"></i> GameGuardian Feature Guide
+      </div>
+      <p class="footer-copy">
+        本網站為 GameGuardian 功能社群教學指南與視覺化視覺圖譜。所有商標與技術名稱均屬原作者所有。
+      </p>
+      <div class="footer-links">
+        <a href="#branch-section">樹狀圖譜</a>
+        <a href="#simulator-section">搜尋模擬器</a>
+        <a href="#lua-section">Lua 腳本</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
